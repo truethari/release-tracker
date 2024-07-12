@@ -11,9 +11,17 @@ bot.on("message", (msg) => {
   bot.sendMessage(chatId, "Pong!");
 });
 
-async function sendTelegramPhoto(caption, photo) {
+async function sendTelegramPhoto(caption, photo, slug, movieId) {
   try {
-    await bot.sendPhoto(config.tg.chatId, photo, { caption });
+    await bot.sendPhoto(config.tg.chatId, photo, {
+      caption,
+      reply_markup: {
+        inline_keyboard: [
+          [{ text: "Release Page", url: `${config.web.BASE_PATH}/movie/${slug}` }],
+          [{ text: "Book Tickets", url: `${config.web.BASE_PATH}/buy-tickets-online/${movieId}` }],
+        ],
+      },
+    });
     console.log("Photo sent successfully to the channel");
   } catch (error) {
     console.error("Error sending photo to the channel:", error);
@@ -57,9 +65,9 @@ const checkForNewMovies = (oldMovies, newMovies) => {
     if (newReleases.length >= 1) {
       for (const movie of newReleases) {
         const imageUrl = movie.image;
-        const message = `🚨🚨🚨 Movie release 🚨🚨🚨\n\n${movie.name}\n\n${movie.synopsis}\n\nGenre: ${movie.genre.join(", ")}`;
+        const message = `🚨🚨🚨 Movie Release Alert 🚨🚨🚨\n\n${movie.name}\n\n${movie.synopsis}\n\nGenre: ${movie.genre.join(", ")}`;
 
-        sendTelegramPhoto(message, imageUrl);
+        sendTelegramPhoto(message, imageUrl, movie.slug, movie.id);
       }
     }
 

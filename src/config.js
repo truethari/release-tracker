@@ -6,6 +6,7 @@ const config = {
     chatId: process.env.TELEGRAM_CHAT_ID,
   },
   web: {
+    BASE_PATH: process.env.BASE_PATH,
     SCOPE: process.env.SCOPE_URL,
   },
 };
@@ -16,6 +17,10 @@ if (!config.tg.token) {
 
 if (!config.tg.chatId) {
   throw new Error("TELEGRAM_CHAT_ID is not defined");
+}
+
+if (!config.web.BASE_PATH) {
+  throw new Error("BASE_PATH is not defined");
 }
 
 if (!config.web.SCOPE) {
